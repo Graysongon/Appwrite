@@ -8,8 +8,13 @@ on:
       - 'package.json'
   workflow_dispatch:
 
+permissions:
+  contents: write
+  packages: write
+  actions: read
+
 jobs:
-  build-and-release:
+    deploy:
     runs-on: ubuntu-latest
     
     steps:
