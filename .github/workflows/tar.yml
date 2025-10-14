@@ -19,11 +19,11 @@ jobs:
           toolchain: stable
           
         - name: Checkout code
-      uses: actions/checkout@v4
+         uses: actions/checkout@v4
       
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
+        - name: Setup Node.js
+         uses: actions/setup-node@v4
+            with:
         node-version: '18' 
 
       - name: Update package dependencies
