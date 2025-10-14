@@ -61,15 +61,7 @@ jobs:
         echo "📁 Package directory contents:"
         ls -la Appwrite/
         
-    - name: Create deployment archive
-      run: |
-        cd Appwrite
-        tar -czf ../Appwrite.tar.gz src/main.js package.json
-        cd ..
-        echo "📦 Archive created: Appwrite.tar.gz"
-        echo "📊 Archive size: $(du -h Appwrite.tar.gz | cut -f1)"
-        
-    - name: Verify archive contents
+   - name: Verify archive contents
       run: |
         echo "🔍 Archive contents:"
         tar -tzf Appwrite.tar.gz
