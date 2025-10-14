@@ -1,5 +1,5 @@
 [package]
-name = "shuttle-app"
+name = "Appwrite-app"
 version = "0.1.0"
 edition = "2021"
 
@@ -14,7 +14,7 @@ base64 = "0.22.1"
 regex = "1.10.4"
 
 [[bin]]
-name = "shuttle-app"
+name = "Appwrite-app"
 path = "src/main.rs"
 
 [profile.release]
