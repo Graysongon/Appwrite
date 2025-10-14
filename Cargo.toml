@@ -1,18 +1,23 @@
-{
-  "name": "nodejs",
-  "version": "1.0.0",
-  "description": "Appwrite",
-  "main": "src/main.js",
-  "author": "eooce",
-  "license": "MIT",
-  "private": false,
-  "scripts": {
-    "start": "node src/main.js"
-  },
-  "dependencies": {
-    "axios": "latest"
-  },
-  "engines": {
-    "node": ">=18"
-  }
-}
+[package]
+name = "Appwrite-app"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+Appwrite-axum = "0.52.0"
+Appwrite-runtime = "0.52.0"
+tokio = { version = "1.38.0", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+reqwest = "0.12.5"
+serde_json = "1.0.117"
+base64 = "0.22.1"
+regex = "1.10.4"
+
+[[bin]]
+name = "Appwrite-app"
+path = "src/main.rs"
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
