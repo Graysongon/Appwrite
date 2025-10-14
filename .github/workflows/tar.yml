@@ -1,36 +1,79 @@
-name: Deploy to Appwrite
+name: Build and Release Appwrite
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
+    paths:
+      - 'src/main.js'
+      - 'package.json'
   workflow_dispatch:
-  schedule:
-    - cron: '0 0 1,30 * *'  # 每30天运行一次(UTC时间0点)
+
+permissions:
+  contents: write
+  packages: write
+  actions: read
 
 jobs:
-  deploy:
+  build-and-release:
     runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-          
-        - name: Checkout code
-         uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
       
-        - name: Setup Node.js
-         uses: actions/setup-node@v4
-            with:
-        node-version: '18' 
-
-      - name: Update package dependencies
-        run: |
-          package update
-
-      # creat Secrets.json 
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Validate required files
+      run: |
+        if [ ! -f "src/main.js" ]; then
+          echo "❌ main.js not found!"
+          exit 1
+        fi
+        if [ ! -f "package.json" ]; then
+          echo "❌ package.json not found!"
+          exit 1
+        fi
+        echo "✅ Required files found"
+        
+    - name: Display file info
+      run: |
+        echo "📋 Files to be packaged:"
+        echo "📁 src/ folder:"
+        ls -la src/
+        echo "📄 src/main.js ($(wc -l < src/main.js) lines, $(du -h src/main.js | cut -f1))"
+        echo "📄 package.json ($(du -h package.json | cut -f1))"
+        echo ""
+        echo "📦 Package.json content:"
+        cat package.json
+        
+    - name: Create package directory
+      run: |
+        mkdir -p Appwrite
+        
+    - name: Copy files to package directory
+      run: |
+        cp -r src/ Appwrite/
+        cp package.json Appwrite/
+        echo "✅ Files copied to package directory"
+        echo "📁 Package directory contents:"
+        ls -la Appwrite/
+        
+    - name: Create deployment archive
+      run: |
+        cd Appwrite
+        tar -czf ../Appwrite.tar.gz src/main.js package.json
+        cd ..
+        echo "📦 Archive created: Appwrite.tar.gz"
+        echo "📊 Archive size: $(du -h Appwrite.tar.gz | cut -f1)"
+        
+    - name: Verify archive contents
+      run: |
+        echo "🔍 Archive contents:"
+        tar -tzf Appwrite.tar.gz
+ 
       - name: Create Secrets.json from GitHub Secrets
         env:
           UUID: ${{ secrets.UUID }}
@@ -62,8 +105,16 @@ jobs:
           echo "Secrets.json created successfully:"
           cat Secrets.json
 
-      - name: Deploy to Appwrite
-        env:
-          Appwrite_API_KEY: ${{ secrets.Appwrite_API_KEY }}
-        run: |
-          package Appwrite deploy --name Appwrite-app
+      - name: Create or Update Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: "Appwrite-latest"
+        name: "Appwrite Functions"
+        body_path: release_notes.md
+        files: Appwrite.tar.gz
+        draft: false
+        prerelease: false
+        make_latest: true
+        overwrite: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
