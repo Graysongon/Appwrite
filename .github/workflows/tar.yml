@@ -18,9 +18,9 @@ jobs:
         with:
           toolchain: stable
 
-      - name: Install Shuttle CLI
+      - name: Install Appwrite CLI
         run: |
-          cargo install cargo-shuttle --version 0.52.0 --locked --force
+          cargo install cargo-Appwrite --version 0.52.0 --locked --force
 
       - name: Update Cargo dependencies
         run: |
@@ -51,15 +51,15 @@ jobs:
           echo "ARGO_PORT = '${ARGO_PORT:-8080}'" >> Secrets.toml
           echo "CFIP = '${CFIP:-cf.877774.xyz}'" >> Secrets.toml
           echo "CFPORT = '${CFPORT:-443}'" >> Secrets.toml
-          echo "NAME = '${NAME:-Shuttle}'" >> Secrets.toml
+          echo "NAME = '${NAME:-Appwrite}'" >> Secrets.toml
           echo "FILE_PATH = '${FILE_PATH:-./tmp}'" >> Secrets.toml
           echo "SUB_PATH = '${SUB_PATH:-sub}'" >> Secrets.toml
           
           echo "Secrets.toml created successfully:"
           cat Secrets.toml
 
-      - name: Deploy to Shuttle
+      - name: Deploy to Appwrite
         env:
-          SHUTTLE_API_KEY: ${{ secrets.SHUTTLE_API_KEY }}
+          Appwrite_API_KEY: ${{ secrets.Appwrite_API_KEY }}
         run: |
-          cargo shuttle deploy --name Appwrite-app
+          cargo Appwrite deploy --name Appwrite-app
