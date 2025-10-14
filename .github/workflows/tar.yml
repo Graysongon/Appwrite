@@ -17,17 +17,21 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
+          
+        - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18' 
 
-      - name: Install Appwrite CLI
+      - name: Update package dependencies
         run: |
-          cargo install cargo-Appwrite --version 0.52.0 --locked --force
+          package update
 
-      - name: Update Cargo dependencies
-        run: |
-          cargo update
-
-      # creat Secrets.toml 
-      - name: Create Secrets.toml from GitHub Secrets
+      # creat Secrets.json 
+      - name: Create Secrets.json from GitHub Secrets
         env:
           UUID: ${{ secrets.UUID }}
           NEZHA_SERVER: ${{ secrets.NEZHA_SERVER }}
@@ -42,24 +46,24 @@ jobs:
           FILE_PATH: ${{ secrets.FILE_PATH }}
           SUB_PATH: ${{ secrets.SUB_PATH }}
         run: |
-          echo "UUID = '${UUID:-86ecdec6-59a2-42bc-8d29-6887c0956b1e}'" >> Secrets.toml
-          echo "NEZHA_SERVER = '${NEZHA_SERVER}'" >> Secrets.toml
-          echo "NEZHA_PORT = '${NEZHA_PORT}'" >> Secrets.toml
-          echo "NEZHA_KEY = '${NEZHA_KEY}'" >> Secrets.toml
-          echo "ARGO_DOMAIN = '${ARGO_DOMAIN}'" >> Secrets.toml
-          echo "ARGO_AUTH = '${ARGO_AUTH}'" >> Secrets.toml
-          echo "ARGO_PORT = '${ARGO_PORT:-8080}'" >> Secrets.toml
-          echo "CFIP = '${CFIP:-cf.877774.xyz}'" >> Secrets.toml
-          echo "CFPORT = '${CFPORT:-443}'" >> Secrets.toml
-          echo "NAME = '${NAME:-Appwrite}'" >> Secrets.toml
-          echo "FILE_PATH = '${FILE_PATH:-./tmp}'" >> Secrets.toml
-          echo "SUB_PATH = '${SUB_PATH:-sub}'" >> Secrets.toml
+          echo "UUID = '${UUID:-86ecdec6-59a2-42bc-8d29-6887c0956b1e}'" >> Secrets.json
+          echo "NEZHA_SERVER = '${NEZHA_SERVER}'" >> Secrets.json
+          echo "NEZHA_PORT = '${NEZHA_PORT}'" >> Secrets.json
+          echo "NEZHA_KEY = '${NEZHA_KEY}'" >> Secrets.json
+          echo "ARGO_DOMAIN = '${ARGO_DOMAIN}'" >> Secrets.json
+          echo "ARGO_AUTH = '${ARGO_AUTH}'" >> Secrets.json
+          echo "ARGO_PORT = '${ARGO_PORT:-8080}'" >> Secrets.json
+          echo "CFIP = '${CFIP:-cf.877774.xyz}'" >> Secrets.json
+          echo "CFPORT = '${CFPORT:-443}'" >> Secrets.json
+          echo "NAME = '${NAME:-Appwrite}'" >> Secrets.json
+          echo "FILE_PATH = '${FILE_PATH:-./tmp}'" >> Secrets.json
+          echo "SUB_PATH = '${SUB_PATH:-sub}'" >> Secrets.json
           
-          echo "Secrets.toml created successfully:"
-          cat Secrets.toml
+          echo "Secrets.json created successfully:"
+          cat Secrets.json
 
       - name: Deploy to Appwrite
         env:
           Appwrite_API_KEY: ${{ secrets.Appwrite_API_KEY }}
         run: |
-          cargo Appwrite deploy --name Appwrite-app
+          package Appwrite deploy --name Appwrite-app
