@@ -20,14 +20,14 @@ jobs:
 
       - name: Install Appwrite CLI
         run: |
-          package install package-Appwrite --version 0.52.0 --locked --force
+          cargo install cargo-Appwrite --version 0.52.0 --locked --force
 
-      - name: Update package dependencies
+      - name: Update Cargo dependencies
         run: |
-          package update
+          cargo update
 
-      # creat Secrets.json
-      - name: Create Secrets.json from GitHub Secrets
+      # creat Secrets.toml 
+      - name: Create Secrets.toml from GitHub Secrets
         env:
           UUID: ${{ secrets.UUID }}
           NEZHA_SERVER: ${{ secrets.NEZHA_SERVER }}
@@ -55,11 +55,11 @@ jobs:
           echo "FILE_PATH = '${FILE_PATH:-./tmp}'" >> Secrets.toml
           echo "SUB_PATH = '${SUB_PATH:-sub}'" >> Secrets.toml
           
-          echo "Secrets.jsoncreated successfully:"
+          echo "Secrets.toml created successfully:"
           cat Secrets.toml
 
       - name: Deploy to Appwrite
         env:
           Appwrite_API_KEY: ${{ secrets.Appwrite_API_KEY }}
         run: |
-          package Appwrite deploy --name Appwrite-app
+          cargo Appwrite deploy --name Appwrite-app
