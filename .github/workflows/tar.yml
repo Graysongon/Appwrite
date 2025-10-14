@@ -26,8 +26,8 @@ jobs:
         run: |
           package update
 
-      # creat Secrets.toml 
-      - name: Create Secrets.toml from GitHub Secrets
+      # creat Secrets.json
+      - name: Create Secrets.json from GitHub Secrets
         env:
           UUID: ${{ secrets.UUID }}
           NEZHA_SERVER: ${{ secrets.NEZHA_SERVER }}
@@ -55,7 +55,7 @@ jobs:
           echo "FILE_PATH = '${FILE_PATH:-./tmp}'" >> Secrets.toml
           echo "SUB_PATH = '${SUB_PATH:-sub}'" >> Secrets.toml
           
-          echo "Secrets.toml created successfully:"
+          echo "Secrets.jsoncreated successfully:"
           cat Secrets.toml
 
       - name: Deploy to Appwrite
