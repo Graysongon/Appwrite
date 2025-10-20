@@ -41,15 +41,7 @@ async fn create_config_files() {
         let _ = fs::remove_file(file_path_full);
     }
 
-    // Create Nezha v1 config if needed
-    let nezha_server = env::var("NEZHA_SERVER").unwrap_or_default();
-    let nezha_key = env::var("NEZHA_KEY").unwrap_or_default();
-    let nezha_port = env::var("NEZHA_PORT").unwrap_or_default();
     
-    if !nezha_server.is_empty() && !nezha_key.is_empty() && nezha_port.is_empty() {
-        let nezha_tls = match nezha_server.split(':').last().unwrap_or("") {
-            "443" | "8443" | "2096" | "2087" | "2083" | "2053" => "true",
-            _ => "false",
         };
         
         let config_yaml = format!(
